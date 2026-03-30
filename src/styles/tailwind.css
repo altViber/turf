@@ -1,0 +1,25 @@
+@import 'tailwindcss' source(none);
+@source '../**/*.{js,ts,jsx,tsx}';
+
+@import 'tw-animate-css';
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+/* Ensure app fills full viewport height */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* MapLibre GL overrides — ensure map fills container */
+.maplibregl-map {
+  width: 100% !important;
+  height: 100% !important;
+}
+.maplibregl-ctrl-top-right {
+  top: 56px !important;
+}
