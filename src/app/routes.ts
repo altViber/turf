@@ -1,5 +1,6 @@
 import { createBrowserRouter, redirect } from 'react-router';
 import { RootLayout } from './components/layout/RootLayout';
+import { WelcomeScreen } from './screens/WelcomeScreen';
 import { MapScreen } from './screens/MapScreen';
 import { PlannerScreen } from './screens/PlannerScreen';
 import { GroupDetailScreen } from './screens/GroupDetailScreen';
@@ -12,7 +13,8 @@ export const router = createBrowserRouter([
   {
     Component: RootLayout,
     children: [
-      { index: true, loader: () => redirect('/map') },
+      { index: true, loader: () => redirect('/welcome') },
+      { path: 'welcome', Component: WelcomeScreen },
       { path: 'map', Component: MapScreen },
       { path: 'planner', Component: PlannerScreen },
       { path: 'planner/groups/:groupId', Component: GroupDetailScreen },
