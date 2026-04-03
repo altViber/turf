@@ -43,15 +43,15 @@ function CreateGroupModal({ open, onClose }: { open: boolean; onClose: () => voi
   return (
     <div className="fixed inset-0 z-50 flex items-end">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative w-full bg-white rounded-t-3xl px-5 pb-10 pt-5">
-        <h2 className="text-gray-900 mb-4" style={{ fontSize: '18px', fontWeight: 700 }}>New Group</h2>
+      <div className="relative w-full bg-surface rounded-t-3xl px-5 pb-10 pt-5">
+        <h2 className="text-foreground mb-4" style={{ fontSize: '18px', fontWeight: 700 }}>New Group</h2>
         <div className="flex gap-2 mb-4 flex-wrap">
           {emojis.map((e) => (
             <button
               key={e}
               onClick={() => setEmoji(e)}
               className={`w-10 h-10 rounded-xl text-xl flex items-center justify-center border-2 transition-all ${
-                emoji === e ? 'border-green-500 bg-green-50' : 'border-transparent bg-gray-100'
+                emoji === e ? 'border-accent-primary bg-accent-primary/10' : 'border-transparent bg-surface-muted'
               }`}
             >
               {e}
@@ -63,19 +63,19 @@ function CreateGroupModal({ open, onClose }: { open: boolean; onClose: () => voi
           placeholder="Group name *"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-gray-700 text-sm outline-none focus:border-green-400 mb-3"
+          className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-text-secondary text-sm outline-none focus:border-accent-primary mb-3"
         />
         <input
           type="text"
           placeholder="Description (optional)"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-gray-700 text-sm outline-none focus:border-green-400 mb-4"
+          className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-text-secondary text-sm outline-none focus:border-accent-primary mb-4"
         />
         <button
           onClick={handleCreate}
           disabled={!name.trim() || saving}
-          className="w-full py-3 rounded-2xl bg-green-600 text-white font-semibold text-sm disabled:opacity-40 flex items-center justify-center gap-2"
+          className="w-full py-3 rounded-2xl bg-accent-primary text-white font-semibold text-sm disabled:opacity-40 flex items-center justify-center gap-2"
         >
           {saving && <Loader2 className="w-4 h-4 animate-spin" />}
           {saving ? 'Creating…' : 'Create Group'}
@@ -98,17 +98,17 @@ export function PlannerScreen() {
   };
 
   return (
-    <div className="h-full overflow-y-auto bg-gray-50">
+    <div className="h-full overflow-y-auto bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-gray-100 px-4 pt-12 pb-4 sticky top-0 z-10">
+      <div className="bg-surface border-b border-divider px-4 pt-12 pb-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-gray-900" style={{ fontSize: '22px', fontWeight: 700 }}>Planner</h1>
-            <p className="text-gray-400 text-sm">Group-based event planning</p>
+            <h1 className="text-foreground" style={{ fontSize: '22px', fontWeight: 700 }}>Planner</h1>
+            <p className="text-text-tertiary text-sm">Group-based event planning</p>
           </div>
           <button
             onClick={() => setCreateOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-2 bg-green-600 text-white rounded-xl text-sm font-medium"
+            className="flex items-center gap-1.5 px-3 py-2 bg-accent-primary text-white rounded-xl text-sm font-medium"
           >
             <Plus className="w-4 h-4" />
             New Group
@@ -118,7 +118,7 @@ export function PlannerScreen() {
 
       <div className="px-4 py-4 space-y-3">
         {groups.length === 0 && (
-          <div className="text-center py-16 text-gray-300">
+          <div className="text-center py-16 text-text-tertiary">
             <Users className="w-10 h-10 mx-auto mb-3" />
             <p className="text-sm">No groups yet. Create one to start planning.</p>
           </div>
@@ -132,7 +132,7 @@ export function PlannerScreen() {
             <button
               key={group.id}
               onClick={() => navigate(`/planner/groups/${group.id}`)}
-              className="w-full bg-white rounded-2xl p-4 text-left shadow-sm border border-gray-100 active:scale-[0.99] transition-transform"
+              className="w-full bg-surface rounded-2xl p-4 text-left shadow-sm border border-divider active:scale-[0.99] transition-transform"
             >
               <div className="flex items-start gap-3">
                 <div
@@ -143,14 +143,14 @@ export function PlannerScreen() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-gray-900 font-semibold text-base truncate">{group.name}</span>
-                    <ChevronRight className="w-4 h-4 text-gray-300 flex-shrink-0" />
+                    <span className="text-foreground font-semibold text-base truncate">{group.name}</span>
+                    <ChevronRight className="w-4 h-4 text-text-tertiary flex-shrink-0" />
                   </div>
                   {group.description && (
-                    <p className="text-gray-400 text-xs truncate mt-0.5">{group.description}</p>
+                    <p className="text-text-tertiary text-xs truncate mt-0.5">{group.description}</p>
                   )}
                   <div className="flex items-center gap-3 mt-2">
-                    <div className="flex items-center gap-1 text-gray-400 text-xs">
+                    <div className="flex items-center gap-1 text-text-tertiary text-xs">
                       <Users className="w-3.5 h-3.5" />
                       {memberCount}
                     </div>
@@ -163,7 +163,7 @@ export function PlannerScreen() {
                         {format(new Date(nextEvent.startDateTime), 'EEE d MMM')} · {groundInfo.city || groundInfo.name}
                       </div>
                     ) : (
-                      <span className="text-gray-300 text-xs">No upcoming events</span>
+                      <span className="text-text-tertiary text-xs">No upcoming events</span>
                     )}
                   </div>
                 </div>

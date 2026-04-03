@@ -106,41 +106,41 @@ export function LogVisitModal({ ground, open, onClose }: LogVisitModalProps) {
       <div className="absolute inset-0 bg-black/40" onClick={isSubmitting ? undefined : handleClose} />
 
       {/* Modal */}
-      <div className="relative w-full bg-white rounded-t-3xl overflow-hidden max-h-[92vh] flex flex-col">
+      <div className="relative w-full bg-surface-elevated rounded-t-3xl overflow-hidden max-h-[92vh] flex flex-col">
         {/* Handle */}
         <div className="flex justify-center pt-3 pb-1">
-          <div className="w-10 h-1 rounded-full bg-gray-200" />
+          <div className="w-10 h-1 rounded-full bg-border" />
         </div>
 
         {/* Header */}
-        <div className="flex items-center justify-between px-5 pb-3 border-b border-gray-100">
+        <div className="flex items-center justify-between px-5 pb-3 border-b border-divider">
           <div>
-            <h2 className="text-gray-900" style={{ fontSize: '18px', fontWeight: 700 }}>Log Visit</h2>
-            <p className="text-gray-400 text-sm truncate max-w-[240px]">{ground.name}</p>
+            <h2 className="text-foreground" style={{ fontSize: '18px', fontWeight: 700 }}>Log Visit</h2>
+            <p className="text-text-tertiary text-sm truncate max-w-[240px]">{ground.name}</p>
           </div>
           <button
             onClick={handleClose}
             disabled={isSubmitting}
-            className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center disabled:opacity-40"
+            className="w-8 h-8 rounded-full bg-surface-muted flex items-center justify-center disabled:opacity-40"
           >
-            <X className="w-4 h-4 text-gray-500" />
+            <X className="w-4 h-4 text-text-secondary" />
           </button>
         </div>
 
         {/* Success state */}
         {submitState === 'success' && (
           <div className="flex-1 flex flex-col items-center justify-center py-10 gap-3">
-            <CheckCircle className="w-12 h-12 text-green-500" />
-            <p className="text-gray-700 font-semibold text-base">Visit saved!</p>
-            <p className="text-gray-400 text-sm">{photos.length > 0 ? `${photos.length} photo${photos.length !== 1 ? 's' : ''} uploaded` : 'No photos'}</p>
+            <CheckCircle className="w-12 h-12 text-accent-primary" />
+            <p className="text-text-secondary font-semibold text-base">Visit saved!</p>
+            <p className="text-text-tertiary text-sm">{photos.length > 0 ? `${photos.length} photo${photos.length !== 1 ? 's' : ''} uploaded` : 'No photos'}</p>
           </div>
         )}
 
         {/* Error state */}
         {submitState === 'error' && (
-          <div className="px-5 py-3 bg-red-50 border-b border-red-100 flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
-            <p className="text-red-600 text-xs leading-snug">{errorMsg}</p>
+          <div className="px-5 py-3 bg-error/10 border-b border-error/20 flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-error flex-shrink-0 mt-0.5" />
+            <p className="text-error text-xs leading-snug">{errorMsg}</p>
           </div>
         )}
 
@@ -149,7 +149,7 @@ export function LogVisitModal({ ground, open, onClose }: LogVisitModalProps) {
           <div className="overflow-y-auto flex-1 px-5 py-4 space-y-4">
             {/* Date */}
             <div>
-              <label className="flex items-center gap-1.5 text-gray-600 text-sm font-medium mb-1.5">
+              <label className="flex items-center gap-1.5 text-text-secondary text-sm font-medium mb-1.5">
                 <Calendar className="w-4 h-4" />
                 Date
               </label>
@@ -159,15 +159,15 @@ export function LogVisitModal({ ground, open, onClose }: LogVisitModalProps) {
                 max={format(new Date(), 'yyyy-MM-dd')}
                 onChange={(e) => setDate(e.target.value)}
                 disabled={isSubmitting}
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-gray-700 outline-none focus:border-green-400 text-sm disabled:opacity-60"
+                className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-text-secondary outline-none focus:border-accent-primary text-sm disabled:opacity-60"
               />
             </div>
 
             {/* Photos */}
             <div>
-              <label className="flex items-center gap-1.5 text-gray-600 text-sm font-medium mb-1.5">
+              <label className="flex items-center gap-1.5 text-text-secondary text-sm font-medium mb-1.5">
                 <Camera className="w-4 h-4" />
-                Photos <span className="text-gray-300 font-normal">(optional)</span>
+                Photos <span className="text-text-tertiary font-normal">(optional)</span>
               </label>
               <div className="flex gap-2 flex-wrap">
                 {photos.map((p, i) => (
@@ -186,9 +186,9 @@ export function LogVisitModal({ ground, open, onClose }: LogVisitModalProps) {
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isSubmitting}
-                  className="w-16 h-16 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center hover:border-green-400 transition-colors disabled:opacity-40"
+                  className="w-16 h-16 rounded-xl border-2 border-dashed border-border flex items-center justify-center hover:border-accent-primary transition-colors disabled:opacity-40"
                 >
-                  <Plus className="w-5 h-5 text-gray-300" />
+                  <Plus className="w-5 h-5 text-text-tertiary" />
                 </button>
               </div>
               <input
@@ -203,9 +203,9 @@ export function LogVisitModal({ ground, open, onClose }: LogVisitModalProps) {
 
             {/* Note */}
             <div>
-              <label className="flex items-center gap-1.5 text-gray-600 text-sm font-medium mb-1.5">
+              <label className="flex items-center gap-1.5 text-text-secondary text-sm font-medium mb-1.5">
                 <FileText className="w-4 h-4" />
-                Note <span className="text-gray-300 font-normal">(optional)</span>
+                Note <span className="text-text-tertiary font-normal">(optional)</span>
               </label>
               <textarea
                 placeholder="Match result, atmosphere, getting there…"
@@ -213,15 +213,15 @@ export function LogVisitModal({ ground, open, onClose }: LogVisitModalProps) {
                 onChange={(e) => setNote(e.target.value)}
                 disabled={isSubmitting}
                 rows={3}
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-gray-700 placeholder-gray-300 text-sm outline-none resize-none focus:border-green-400 disabled:opacity-60"
+                className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-text-secondary placeholder-text-tertiary text-sm outline-none resize-none focus:border-accent-primary disabled:opacity-60"
               />
             </div>
 
             {/* Companions */}
             <div>
-              <label className="flex items-center gap-1.5 text-gray-600 text-sm font-medium mb-1.5">
+              <label className="flex items-center gap-1.5 text-text-secondary text-sm font-medium mb-1.5">
                 <Users className="w-4 h-4" />
-                Companions <span className="text-gray-300 font-normal">(optional)</span>
+                Companions <span className="text-text-tertiary font-normal">(optional)</span>
               </label>
               <input
                 type="text"
@@ -229,21 +229,21 @@ export function LogVisitModal({ ground, open, onClose }: LogVisitModalProps) {
                 value={companions}
                 onChange={(e) => setCompanions(e.target.value)}
                 disabled={isSubmitting}
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-gray-700 placeholder-gray-300 text-sm outline-none focus:border-green-400 disabled:opacity-60"
+                className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-text-secondary placeholder-text-tertiary text-sm outline-none focus:border-accent-primary disabled:opacity-60"
               />
             </div>
 
             {/* Link to group */}
             <div>
-              <label className="flex items-center gap-1.5 text-gray-600 text-sm font-medium mb-1.5">
+              <label className="flex items-center gap-1.5 text-text-secondary text-sm font-medium mb-1.5">
                 <Link2 className="w-4 h-4" />
-                Link to group <span className="text-gray-300 font-normal">(optional)</span>
+                Link to group <span className="text-text-tertiary font-normal">(optional)</span>
               </label>
               <select
                 value={groupId}
                 onChange={(e) => setGroupId(e.target.value)}
                 disabled={isSubmitting}
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-gray-700 text-sm outline-none focus:border-green-400 disabled:opacity-60"
+                className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-text-secondary text-sm outline-none focus:border-accent-primary disabled:opacity-60"
               >
                 <option value="">No group</option>
                 {groups.map((g) => (
@@ -258,11 +258,11 @@ export function LogVisitModal({ ground, open, onClose }: LogVisitModalProps) {
 
         {/* Submit */}
         {submitState !== 'success' && (
-          <div className="px-5 py-4 pb-8 border-t border-gray-100 bg-white">
+          <div className="px-5 py-4 pb-8 border-t border-divider bg-surface-elevated">
             <button
               onClick={submitState === 'error' ? handleSubmit : handleSubmit}
               disabled={isSubmitting || !date}
-              className="w-full py-3.5 rounded-2xl bg-green-600 text-white font-semibold text-sm disabled:opacity-40 active:opacity-80 flex items-center justify-center gap-2"
+              className="w-full py-3.5 rounded-2xl bg-accent-primary text-white font-semibold text-sm disabled:opacity-40 active:opacity-80 flex items-center justify-center gap-2"
             >
               {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
               {submitState === 'saving' && 'Saving visit…'}

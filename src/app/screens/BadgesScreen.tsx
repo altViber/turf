@@ -27,33 +27,33 @@ function BadgeCard({ badge, unlocked, progress }: {
   const pct = Math.min(100, Math.round((progress.current / progress.threshold) * 100));
 
   return (
-    <div className={`bg-white rounded-2xl p-4 border transition-all ${
-      unlocked ? 'border-green-200 shadow-sm' : 'border-gray-100 opacity-70'
+    <div className={`bg-surface rounded-2xl p-4 border transition-all ${
+      unlocked ? 'border-accent-primary/30 shadow-sm' : 'border-divider opacity-70'
     }`}>
       <div className="flex items-start gap-3">
         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 ${
-          unlocked ? 'bg-green-50' : 'bg-gray-100'
+          unlocked ? 'bg-accent-primary/10' : 'bg-surface-muted'
         }`}>
-          {unlocked ? badge.icon : <Lock className="w-5 h-5 text-gray-300" />}
+          {unlocked ? badge.icon : <Lock className="w-5 h-5 text-text-tertiary" />}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-gray-900 font-semibold text-sm">{badge.name}</span>
+            <span className="text-foreground font-semibold text-sm">{badge.name}</span>
             {unlocked && (
-              <span className="px-1.5 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-medium">✓</span>
+              <span className="px-1.5 py-0.5 rounded-full bg-accent-primary/15 text-accent-primary text-xs font-medium">✓</span>
             )}
           </div>
-          <p className="text-gray-400 text-xs leading-snug">{badge.description}</p>
+          <p className="text-text-tertiary text-xs leading-snug">{badge.description}</p>
           {/* Progress bar */}
           {!unlocked && (
             <div className="mt-2">
-              <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-1.5 bg-surface-muted rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-green-400 rounded-full transition-all"
+                  className="h-full bg-accent-primary rounded-full transition-all"
                   style={{ width: `${pct}%` }}
                 />
               </div>
-              <p className="text-gray-300 text-xs mt-0.5 text-right">
+              <p className="text-text-tertiary text-xs mt-0.5 text-right">
                 {progress.current} / {progress.threshold}
               </p>
             </div>
@@ -90,12 +90,12 @@ export function BadgesScreen() {
   const locked = badgeDefinitions.filter((b) => !unlockedIds.has(b.id));
 
   return (
-    <div className="h-full overflow-y-auto bg-gray-50">
+    <div className="h-full overflow-y-auto bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-gray-100 px-4 pt-12 pb-4 sticky top-0 z-10">
-        <h1 className="text-gray-900" style={{ fontSize: '22px', fontWeight: 700 }}>Badges</h1>
+      <div className="bg-surface border-b border-divider px-4 pt-12 pb-4 sticky top-0 z-10">
+        <h1 className="text-foreground" style={{ fontSize: '22px', fontWeight: 700 }}>Badges</h1>
         <div className="flex items-center gap-2 mt-2">
-          <div className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
+          <div className="px-3 py-1 bg-accent-primary/15 text-accent-primary rounded-full text-sm font-semibold">
             {unlocked.length} / {badgeDefinitions.length} unlocked
           </div>
         </div>
@@ -106,9 +106,9 @@ export function BadgesScreen() {
         {unlocked.length > 0 && (
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-gray-400 text-xs uppercase tracking-wider font-semibold">Unlocked</span>
-              <div className="flex-1 h-px bg-gray-100" />
-              <span className="text-white text-xs font-bold px-2 py-0.5 rounded-full bg-green-500">{unlocked.length}</span>
+              <span className="text-text-tertiary text-xs uppercase tracking-wider font-semibold">Unlocked</span>
+              <div className="flex-1 h-px bg-surface-muted" />
+              <span className="text-white text-xs font-bold px-2 py-0.5 rounded-full bg-accent-primary">{unlocked.length}</span>
             </div>
             <div className="space-y-3">
               {unlocked.map((b) => (
@@ -126,8 +126,8 @@ export function BadgesScreen() {
             <div key={cat} className="mb-6">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-lg">{CATEGORY_ICONS[cat]}</span>
-                <span className="text-gray-400 text-xs uppercase tracking-wider font-semibold">{CATEGORY_LABELS[cat]}</span>
-                <div className="flex-1 h-px bg-gray-100" />
+                <span className="text-text-tertiary text-xs uppercase tracking-wider font-semibold">{CATEGORY_LABELS[cat]}</span>
+                <div className="flex-1 h-px bg-surface-muted" />
               </div>
               <div className="space-y-3">
                 {catLocked.map((b) => (

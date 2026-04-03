@@ -256,13 +256,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-white">
+      <div className="flex items-center justify-center h-screen bg-background">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-green-600 flex items-center justify-center">
+          <div className="w-14 h-14 rounded-2xl bg-accent-primary flex items-center justify-center">
             <span className="text-2xl">⚽</span>
           </div>
-          <div className="w-8 h-8 border-[3px] border-green-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-gray-400 text-sm font-medium">Loading your data…</p>
+          <div className="w-8 h-8 border-[3px] border-accent-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-text-tertiary text-sm font-medium">Loading your data…</p>
         </div>
       </div>
     );
