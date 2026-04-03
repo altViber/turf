@@ -32,7 +32,7 @@ export default function App() {
       sessionStorage.setItem('fromOnboarding', 'true');
       // Force the URL to /map BEFORE RouterProvider mounts so it never
       // restores a stale route like /profile from a previous session.
-      window.history.replaceState(null, '', '/map');
+      window.history.replaceState(null, '', '/welcome');
     } catch {
       /* ignore storage errors */
     }
