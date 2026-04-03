@@ -78,8 +78,8 @@ export function MapScreen() {
           onClick={toggleRailMode}
           className={`flex items-center gap-2 px-3 py-2 rounded-2xl shadow-lg transition-all font-medium text-sm ${
             railModeActive
-              ? 'bg-blue-600 text-white'
-              : 'bg-white text-gray-700 border border-gray-200'
+              ? 'bg-info text-white'
+              : 'bg-surface text-text-secondary border border-border'
           }`}
         >
           <Train className="w-4 h-4" />
@@ -112,7 +112,7 @@ export function MapScreen() {
       {railModeActive && !railPanelOpen && (
         <button
           onClick={() => setRailPanelOpen(true)}
-          className="absolute bottom-20 right-4 z-20 bg-blue-600 text-white px-3 py-2 rounded-2xl shadow-lg text-xs font-medium flex items-center gap-1.5"
+          className="absolute bottom-20 right-4 z-20 bg-info text-white px-3 py-2 rounded-2xl shadow-lg text-xs font-medium flex items-center gap-1.5"
         >
           <Train className="w-3.5 h-3.5" />
           Configure lines
@@ -131,7 +131,7 @@ export function MapScreen() {
       {/* Ground count overlay */}
       {railModeActive && selectedLines.length > 0 && (
         <div className="absolute top-4 right-16 z-20">
-          <div className="bg-white rounded-2xl px-3 py-1.5 shadow border border-gray-100 text-xs text-gray-600 font-medium">
+          <div className="bg-surface rounded-2xl px-3 py-1.5 shadow border border-divider text-xs text-text-secondary font-medium">
             {reachableCount} reachable ground{reachableCount !== 1 ? 's' : ''}
           </div>
         </div>
@@ -143,7 +143,7 @@ export function MapScreen() {
       {!railModeActive && mapStatus === 'zoom-too-low' && !hintDismissed && (
         <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
           <div className="flex items-center gap-2 bg-black/60 text-white text-xs px-4 py-2 rounded-full backdrop-blur-sm shadow-lg whitespace-nowrap">
-            <Layers className="w-3.5 h-3.5 text-green-300 shrink-0" />
+            <Layers className="w-3.5 h-3.5 text-accent-primary/50 shrink-0" />
             <span>
               Clusters visible &mdash; zoom in to see individual grounds
             </span>

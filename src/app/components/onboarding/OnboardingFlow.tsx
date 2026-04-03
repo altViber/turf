@@ -37,10 +37,10 @@ function ClusterPill({
           height: size,
           fontSize,
           background: large
-            ? 'linear-gradient(135deg,#16a34a,#15803d)'
+            ? 'linear-gradient(135deg,var(--accent-primary),var(--accent-primary))'
             : count > 8
-            ? 'linear-gradient(135deg,#22c55e,#16a34a)'
-            : 'linear-gradient(135deg,#4ade80,#22c55e)',
+            ? 'linear-gradient(135deg,var(--accent-primary),var(--accent-primary))'
+            : 'linear-gradient(135deg,var(--accent-primary),var(--accent-primary))',
           border: '2.5px solid #fff',
           boxShadow: '0 3px 10px rgba(22,163,74,0.4)',
         }}
@@ -64,7 +64,7 @@ function GroundDot({
         top: y,
         width: stadium ? 14 : 10,
         height: stadium ? 14 : 10,
-        background: stadium ? '#16a34a' : '#4ade80',
+        background: stadium ? 'var(--accent-primary)' : 'var(--accent-primary)',
         boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
       }}
     />
@@ -118,7 +118,7 @@ function MapVisual() {
 // ── Screen 2: Rail Mode ───────────────────────────────────────────────────────
 
 function RailVisual() {
-  const lineColor = '#dc2626';
+  const lineColor = 'var(--error)';
   const linePoints = [
     { x: 180, y: 30 },
     { x: 155, y: 75 },
@@ -143,10 +143,10 @@ function RailVisual() {
   }, '');
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center bg-gray-50">
+    <div className="relative w-full h-full flex items-center justify-center bg-background">
       {/* Background circles for depth */}
-      <div className="absolute w-48 h-48 rounded-full bg-red-50 opacity-60" style={{ top: '5%', left: '50%', transform: 'translateX(-50%)' }} />
-      <div className="absolute w-32 h-32 rounded-full bg-green-50 opacity-80" style={{ bottom: '8%', right: '20%' }} />
+      <div className="absolute w-48 h-48 rounded-full bg-accent-primary/10 opacity-60" style={{ top: '5%', left: '50%', transform: 'translateX(-50%)' }} />
+      <div className="absolute w-32 h-32 rounded-full bg-accent-primary/10 opacity-80" style={{ bottom: '8%', right: '20%' }} />
 
       {/* RE line badge */}
       <div
@@ -175,7 +175,7 @@ function RailVisual() {
         {groundsAt.map((g, i) => (
           <g key={i}>
             <circle cx={g.cx} cy={g.cy} r={g.r + 3} fill="rgba(34,197,94,0.2)" />
-            <circle cx={g.cx} cy={g.cy} r={g.r} fill="#16a34a" stroke="#fff" strokeWidth="2.5" />
+            <circle cx={g.cx} cy={g.cy} r={g.r} fill="var(--accent-primary)" stroke="#fff" strokeWidth="2.5" />
           </g>
         ))}
 
@@ -189,9 +189,9 @@ function RailVisual() {
       </svg>
 
       {/* 30 min hint */}
-      <div className="absolute right-6 top-1/2 -translate-y-1/2 bg-white rounded-xl px-2 py-1.5 shadow text-center border border-gray-100">
-        <p className="text-gray-400 text-xs">⏱ 30 min</p>
-        <p className="text-gray-600 text-xs font-semibold">Radius</p>
+      <div className="absolute right-6 top-1/2 -translate-y-1/2 bg-surface rounded-xl px-2 py-1.5 shadow text-center border border-divider">
+        <p className="text-text-tertiary text-xs">⏱ 30 min</p>
+        <p className="text-text-secondary text-xs font-semibold">Radius</p>
       </div>
     </div>
   );
@@ -201,21 +201,21 @@ function RailVisual() {
 
 function GroupsVisual() {
   const members = [
-    { initials: 'MM', color: '#16a34a' },
-    { initials: 'JS', color: '#2563eb' },
-    { initials: 'AK', color: '#9333ea' },
-    { initials: 'LR', color: '#f59e0b' },
+    { initials: 'MM', color: 'var(--accent-primary)' },
+    { initials: 'JS', color: 'var(--info)' },
+    { initials: 'AK', color: 'var(--accent-primary)' },
+    { initials: 'LR', color: 'var(--warning)' },
   ];
 
   return (
     <div className="flex flex-col gap-3 px-5 pt-6 pb-4 w-full">
       {/* Group card */}
-      <div className="bg-white rounded-2xl px-4 py-3.5 shadow-sm border border-gray-100">
+      <div className="bg-surface rounded-2xl px-4 py-3.5 shadow-sm border border-divider">
         <div className="flex items-center gap-3">
           <span className="text-3xl">⚽</span>
           <div className="flex-1">
-            <p className="text-gray-900 font-bold text-sm">Ruhr Groundhoppers</p>
-            <p className="text-gray-400 text-xs mt-0.5">4 Mitglieder · 12 Besuche</p>
+            <p className="text-foreground font-bold text-sm">Ruhr Groundhoppers</p>
+            <p className="text-text-tertiary text-xs mt-0.5">4 Mitglieder · 12 Besuche</p>
           </div>
           {/* Avatars */}
           <div className="flex -space-x-2">
@@ -233,30 +233,30 @@ function GroupsVisual() {
       </div>
 
       {/* Upcoming event card */}
-      <div className="bg-green-600 rounded-2xl px-4 py-3.5 shadow-md text-white relative overflow-hidden">
+      <div className="bg-accent-primary rounded-2xl px-4 py-3.5 shadow-md text-white relative overflow-hidden">
         {/* Decorative circle */}
         <div className="absolute -top-4 -right-4 w-20 h-20 rounded-full bg-white opacity-10" />
         <div className="flex items-center gap-1.5 mb-2">
-          <Calendar className="w-3.5 h-3.5 text-green-200" />
-          <span className="text-green-200 text-xs font-medium">Nächstes Event</span>
+          <Calendar className="w-3.5 h-3.5 text-white/70" />
+          <span className="text-white/70 text-xs font-medium">Nächstes Event</span>
         </div>
         <p className="font-bold text-base leading-tight">Dortmund Stadionrunde</p>
         <div className="flex items-center gap-1.5 mt-2">
-          <MapPin className="w-3 h-3 text-green-300 shrink-0" />
-          <span className="text-green-100 text-xs">Signal Iduna Park · Sa, 15 Mrz</span>
+          <MapPin className="w-3 h-3 text-white/60 shrink-0" />
+          <span className="text-white/80 text-xs">Signal Iduna Park · Sa, 15 Mrz</span>
         </div>
       </div>
 
       {/* Second event (faded) */}
-      <div className="bg-white rounded-2xl px-4 py-3 border border-gray-100 opacity-60 shadow-sm">
+      <div className="bg-surface rounded-2xl px-4 py-3 border border-divider opacity-60 shadow-sm">
         <div className="flex items-center gap-1.5 mb-1">
-          <Calendar className="w-3 h-3 text-gray-300" />
-          <span className="text-gray-400 text-xs">28 Mrz</span>
+          <Calendar className="w-3 h-3 text-text-tertiary" />
+          <span className="text-text-tertiary text-xs">28 Mrz</span>
         </div>
-        <p className="text-gray-700 font-semibold text-sm">Bochum Vereinsrunde</p>
+        <p className="text-text-secondary font-semibold text-sm">Bochum Vereinsrunde</p>
         <div className="flex items-center gap-1 mt-1">
-          <Navigation className="w-3 h-3 text-gray-300" />
-          <span className="text-gray-400 text-xs">Vonovia Ruhrstadion</span>
+          <Navigation className="w-3 h-3 text-text-tertiary" />
+          <span className="text-text-tertiary text-xs">Vonovia Ruhrstadion</span>
         </div>
       </div>
     </div>
@@ -283,20 +283,20 @@ function BadgesVisual() {
       {/* Visit counter card */}
       <div
         className="rounded-2xl px-5 py-4 relative overflow-hidden"
-        style={{ background: 'linear-gradient(135deg,#16a34a,#15803d)' }}
+        style={{ background: 'linear-gradient(135deg,var(--accent-primary),var(--accent-primary))' }}
       >
         <div className="absolute -bottom-3 -right-3 w-20 h-20 rounded-full bg-white opacity-10" />
         <div className="absolute -top-4 -left-2 w-16 h-16 rounded-full bg-white opacity-5" />
         <p className="text-white text-xs font-medium opacity-80 mb-0.5">Bereits besucht</p>
         <p className="text-white font-bold text-4xl leading-none">27</p>
-        <p className="text-green-200 text-sm mt-0.5">Grounds</p>
+        <p className="text-white/70 text-sm mt-0.5">Grounds</p>
       </div>
 
       {/* Badge grid */}
-      <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+      <div className="bg-surface rounded-2xl p-4 border border-divider shadow-sm">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-gray-700 font-semibold text-xs">Badges</p>
-          <span className="text-gray-400 text-xs">4 / 9 freigeschaltet</span>
+          <p className="text-text-secondary font-semibold text-xs">Badges</p>
+          <span className="text-text-tertiary text-xs">4 / 9 freigeschaltet</span>
         </div>
         <div className="grid grid-cols-3 gap-2">
           {badges.map((b, i) => (
@@ -304,8 +304,8 @@ function BadgesVisual() {
               key={i}
               className={`rounded-xl flex items-center justify-center aspect-square text-xl border ${
                 b.unlocked
-                  ? 'bg-green-50 border-green-100'
-                  : 'bg-gray-50 border-gray-100 opacity-40 grayscale'
+                  ? 'bg-accent-primary/10 border-accent-primary/30'
+                  : 'bg-background border-divider opacity-40 grayscale'
               }`}
             >
               {b.icon}
@@ -337,7 +337,7 @@ const SCREENS: ScreenConfig[] = [
     hint: 'Zoome rein, um einzelne Grounds zu sehen.',
     visual: <MapVisual />,
     ctaLabel: 'Weiter',
-    accent: '#16a34a',
+    accent: 'var(--accent-primary)',
   },
   {
     icon: <Train className="w-5 h-5" />,
@@ -346,7 +346,7 @@ const SCREENS: ScreenConfig[] = [
     hint: 'Nur Grounds innerhalb von 30 Minuten werden angezeigt.',
     visual: <RailVisual />,
     ctaLabel: 'Weiter',
-    accent: '#dc2626',
+    accent: 'var(--error)',
   },
   {
     icon: <Users className="w-5 h-5" />,
@@ -355,7 +355,7 @@ const SCREENS: ScreenConfig[] = [
     hint: 'Nur Gruppen-basierte Planung, kein globaler Planer.',
     visual: <GroupsVisual />,
     ctaLabel: 'Weiter',
-    accent: '#2563eb',
+    accent: 'var(--info)',
   },
   {
     icon: <Award className="w-5 h-5" />,
@@ -364,7 +364,7 @@ const SCREENS: ScreenConfig[] = [
     hint: 'Badges werden automatisch freigeschaltet.',
     visual: <BadgesVisual />,
     ctaLabel: 'Zur Karte',
-    accent: '#16a34a',
+    accent: 'var(--accent-primary)',
   },
 ];
 
@@ -388,7 +388,7 @@ function ProgressDots({
           style={{
             width: i === current ? 20 : 6,
             height: 6,
-            background: i === current ? accent : '#d1d5db',
+            background: i === current ? accent : 'var(--border)',
           }}
         />
       ))}
@@ -457,7 +457,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         }
       `}</style>
 
-      <div className="fixed inset-0 bg-white z-50 flex flex-col overflow-hidden select-none">
+      <div className="fixed inset-0 bg-surface z-50 flex flex-col overflow-hidden select-none">
         {/* ── Slide container ────────────────────────────────────────────── */}
         <div
           className="flex-1 overflow-hidden"
@@ -487,13 +487,13 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                 </div>
 
                 {/* Text content */}
-                <div className="bg-white px-6 pt-5 pb-8 flex flex-col gap-4 shrink-0">
+                <div className="bg-surface px-6 pt-5 pb-8 flex flex-col gap-4 shrink-0">
                   {/* Progress dots */}
                   <ProgressDots total={SCREENS.length} current={i} accent={s.accent} />
 
                   {/* Headline */}
                   <h1
-                    className="text-gray-900 leading-tight"
+                    className="text-foreground leading-tight"
                     style={{ fontSize: 26, fontWeight: 800, whiteSpace: 'pre-line' }}
                   >
                     {s.headline}
@@ -501,7 +501,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
                   {/* Body */}
                   <p
-                    className="text-gray-500 leading-relaxed"
+                    className="text-text-secondary leading-relaxed"
                     style={{ fontSize: 14, fontWeight: 450, whiteSpace: 'pre-line' }}
                   >
                     {s.body}

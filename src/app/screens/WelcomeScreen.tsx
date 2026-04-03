@@ -11,14 +11,14 @@ import {
 import { getNearbyMatches, getUserLocation, type Match } from '../../services/matchService';
 
 const LEAGUE_COLORS: Record<string, string> = {
-  bl1: 'bg-red-100 text-red-700',
-  bl2: 'bg-blue-100 text-blue-700',
-  bl3: 'bg-amber-100 text-amber-700',
-  dfb: 'bg-purple-100 text-purple-700',
+  bl1: 'bg-error/15 text-error',
+  bl2: 'bg-info/15 text-info',
+  bl3: 'bg-warning/15 text-warning',
+  dfb: 'bg-accent-primary/15 text-accent-primary',
 };
 
 // Fallback color for amateur/community leagues
-const DEFAULT_LEAGUE_COLOR = 'bg-emerald-100 text-emerald-700';
+const DEFAULT_LEAGUE_COLOR = 'bg-surface-muted text-text-secondary';
 
 const LEAGUE_LABELS: Record<string, string> = {
   bl1: '1. BL',
@@ -118,17 +118,17 @@ export function WelcomeScreen() {
   };
 
   return (
-    <div className="h-full overflow-y-auto bg-gray-50">
+    <div className="h-full overflow-y-auto bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-gray-100 px-4 pt-12 pb-5">
-        <p className="text-gray-400 text-sm font-medium">
+      <div className="bg-surface border-b border-divider px-4 pt-12 pb-5">
+        <p className="text-text-tertiary text-sm font-medium">
           {format(new Date(), 'EEEE, d. MMMM yyyy', { locale: de })}
         </p>
-        <h1 className="text-gray-900 mt-1" style={{ fontSize: '24px', fontWeight: 700 }}>
+        <h1 className="text-foreground mt-1" style={{ fontSize: '24px', fontWeight: 700 }}>
           {greeting()}, {profile.displayName.split(' ')[0]}
         </h1>
         {userLocation && (
-          <div className="flex items-center gap-1 mt-1.5 text-gray-300 text-xs">
+          <div className="flex items-center gap-1 mt-1.5 text-text-tertiary text-xs">
             <Locate className="w-3 h-3" />
             <span>Spiele im Umkreis von 50 km</span>
           </div>
@@ -137,21 +137,21 @@ export function WelcomeScreen() {
 
       <div className="px-4 py-4 space-y-5">
         {/* Week Calendar Strip */}
-        <section className="bg-white rounded-2xl border border-gray-100 p-3">
+        <section className="bg-surface rounded-2xl border border-divider p-3">
           {/* Month & week navigation */}
           <div className="flex items-center justify-between mb-3">
             <button
               onClick={() => setWeekOffset((w) => w - 1)}
-              className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors"
+              className="w-7 h-7 rounded-lg flex items-center justify-center text-text-tertiary hover:bg-surface-muted transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-sm font-semibold text-gray-700">
+            <span className="text-sm font-semibold text-text-secondary">
               {format(weekStart, 'MMMM yyyy', { locale: de })}
             </span>
             <button
               onClick={() => setWeekOffset((w) => w + 1)}
-              className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors"
+              className="w-7 h-7 rounded-lg flex items-center justify-center text-text-tertiary hover:bg-surface-muted transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -171,14 +171,14 @@ export function WelcomeScreen() {
                   onClick={() => setSelectedDate(day)}
                   className={`flex flex-col items-center py-1.5 rounded-xl transition-all ${
                     isSelected
-                      ? 'bg-green-600 text-white'
+                      ? 'bg-accent-primary text-white'
                       : today
-                        ? 'bg-green-50 text-green-700'
-                        : 'text-gray-600 hover:bg-gray-50'
+                        ? 'bg-accent-primary/10 text-accent-primary'
+                        : 'text-text-secondary hover:bg-surface-muted'
                   }`}
                 >
                   <span className={`text-[10px] uppercase font-medium ${
-                    isSelected ? 'text-white/70' : 'text-gray-400'
+                    isSelected ? 'text-white/70' : 'text-text-tertiary'
                   }`}>
                     {format(day, 'EEEEE', { locale: de })}
                   </span>
@@ -191,7 +191,7 @@ export function WelcomeScreen() {
                   <div className="h-1.5 mt-0.5">
                     {hasEvent && (
                       <div className={`w-1.5 h-1.5 rounded-full ${
-                        isSelected ? 'bg-white' : 'bg-green-500'
+                        isSelected ? 'bg-white' : 'bg-accent-primary'
                       }`} />
                     )}
                   </div>
@@ -204,14 +204,14 @@ export function WelcomeScreen() {
         {/* Matches & Events for selected day */}
         <section>
           <div className="flex items-center gap-2 mb-3">
-            <Calendar className="w-4 h-4 text-green-600" />
-            <span className="text-gray-900 text-sm font-semibold">
+            <Calendar className="w-4 h-4 text-accent-primary" />
+            <span className="text-foreground text-sm font-semibold">
               {selectedIsToday
                 ? 'Heute auf dem Platz'
                 : format(selectedDate, 'EEEE, d. MMMM', { locale: de })}
             </span>
             {totalSelected > 0 && (
-              <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">
+              <span className="bg-accent-primary/15 text-accent-primary text-xs font-bold px-2 py-0.5 rounded-full">
                 {totalSelected}
               </span>
             )}
@@ -219,30 +219,30 @@ export function WelcomeScreen() {
 
           {/* Loading state */}
           {matchesLoading && (
-            <div className="bg-white rounded-2xl border border-gray-100 p-4 flex items-center justify-center gap-2">
-              <div className="w-4 h-4 border-2 border-green-600 border-t-transparent rounded-full animate-spin" />
-              <span className="text-gray-400 text-sm">Spiele werden geladen…</span>
+            <div className="bg-surface rounded-2xl border border-divider p-4 flex items-center justify-center gap-2">
+              <div className="w-4 h-4 border-2 border-accent-primary border-t-transparent rounded-full animate-spin" />
+              <span className="text-text-tertiary text-sm">Spiele werden geladen…</span>
             </div>
           )}
 
           {/* Error state */}
           {matchesError && (
-            <div className="bg-amber-50 rounded-2xl border border-amber-200 p-3 flex items-start gap-2 mb-3">
-              <AlertCircle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-              <span className="text-amber-700 text-xs">{matchesError}</span>
+            <div className="bg-warning/10 rounded-2xl border border-warning/30 p-3 flex items-start gap-2 mb-3">
+              <AlertCircle className="w-4 h-4 text-warning flex-shrink-0 mt-0.5" />
+              <span className="text-warning text-xs">{matchesError}</span>
             </div>
           )}
 
           {/* No events */}
           {!matchesLoading && totalSelected === 0 && (
-            <div className="bg-white rounded-2xl border border-gray-100 p-5 text-center">
-              <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center mx-auto mb-3">
+            <div className="bg-surface rounded-2xl border border-divider p-5 text-center">
+              <div className="w-12 h-12 rounded-2xl bg-background flex items-center justify-center mx-auto mb-3">
                 <span className="text-2xl">⚽</span>
               </div>
-              <p className="text-gray-500 text-sm font-medium">
+              <p className="text-text-secondary text-sm font-medium">
                 Keine Spiele {selectedIsToday ? 'für heute' : 'an diesem Tag'} in deiner Nähe
               </p>
-              <p className="text-gray-300 text-xs mt-1">
+              <p className="text-text-tertiary text-xs mt-1">
                 Blättere durch die Woche, um Spieltage zu finden.
               </p>
             </div>
@@ -258,7 +258,7 @@ export function WelcomeScreen() {
                   return (
                     <div
                       key={match.matchID}
-                      className="bg-white rounded-2xl border border-gray-100 p-4"
+                      className="bg-surface rounded-2xl border border-divider p-4"
                     >
                       {/* League badge + time */}
                       <div className="flex items-center justify-between mb-3">
@@ -267,7 +267,7 @@ export function WelcomeScreen() {
                         }`}>
                           {LEAGUE_LABELS[match.leagueShortcut] ?? match.leagueName.replace(/\s*\d{4}.*/, '')}
                         </span>
-                        <span className="text-xs text-gray-400 font-medium">
+                        <span className="text-xs text-text-tertiary font-medium">
                           {format(new Date(match.matchDateTime), 'HH:mm')} Uhr
                         </span>
                       </div>
@@ -282,7 +282,7 @@ export function WelcomeScreen() {
                             className="w-7 h-7 object-contain flex-shrink-0"
                             onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                           />
-                          <span className="text-sm font-semibold text-gray-900 truncate">
+                          <span className="text-sm font-semibold text-foreground truncate">
                             {match.team1.shortName || match.team1.teamName}
                           </span>
                         </div>
@@ -290,15 +290,15 @@ export function WelcomeScreen() {
                         {/* Score or vs */}
                         <div className="flex-shrink-0 px-2">
                           {match.matchIsFinished && score ? (
-                            <span className="text-sm font-bold text-gray-900 tabular-nums">{score}</span>
+                            <span className="text-sm font-bold text-foreground tabular-nums">{score}</span>
                           ) : (
-                            <span className="text-xs text-gray-300 font-medium">vs</span>
+                            <span className="text-xs text-text-tertiary font-medium">vs</span>
                           )}
                         </div>
 
                         {/* Away */}
                         <div className="flex-1 flex items-center gap-2 justify-end min-w-0">
-                          <span className="text-sm font-semibold text-gray-900 truncate text-right">
+                          <span className="text-sm font-semibold text-foreground truncate text-right">
                             {match.team2.shortName || match.team2.teamName}
                           </span>
                           <img
@@ -312,13 +312,13 @@ export function WelcomeScreen() {
 
                       {/* Ground info */}
                       {match.ground && (
-                        <div className="flex items-center gap-1.5 mt-2.5 pt-2.5 border-t border-gray-50">
-                          <MapPin className="w-3 h-3 text-gray-300" />
-                          <span className="text-xs text-gray-400 truncate">
+                        <div className="flex items-center gap-1.5 mt-2.5 pt-2.5 border-t border-divider">
+                          <MapPin className="w-3 h-3 text-text-tertiary" />
+                          <span className="text-xs text-text-tertiary truncate">
                             {match.ground.name} — {match.ground.city}
                           </span>
                           {match.ground.capacity && (
-                            <span className="text-xs text-gray-300 ml-auto flex-shrink-0">
+                            <span className="text-xs text-text-tertiary ml-auto flex-shrink-0">
                               {match.ground.capacity.toLocaleString('de-DE')} Plätze
                             </span>
                           )}
@@ -335,9 +335,9 @@ export function WelcomeScreen() {
             <div className="space-y-3">
               {selectedMatches.length > 0 && (
                 <div className="flex items-center gap-2 mt-1 mb-1">
-                  <Users className="w-3.5 h-3.5 text-gray-400" />
-                  <span className="text-gray-400 text-xs uppercase tracking-wider font-semibold">Deine Events</span>
-                  <div className="flex-1 h-px bg-gray-100" />
+                  <Users className="w-3.5 h-3.5 text-text-tertiary" />
+                  <span className="text-text-tertiary text-xs uppercase tracking-wider font-semibold">Deine Events</span>
+                  <div className="flex-1 h-px bg-surface-muted" />
                 </div>
               )}
               {selectedGroupEvents.map((event) => {
@@ -346,48 +346,48 @@ export function WelcomeScreen() {
                   <button
                     key={event.id}
                     onClick={() => navigate(`/planner/groups/${event.groupId}`)}
-                    className="w-full bg-white rounded-2xl border border-gray-100 p-4 text-left transition-all active:scale-[0.98]"
+                    className="w-full bg-surface rounded-2xl border border-divider p-4 text-left transition-all active:scale-[0.98]"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="w-11 h-11 rounded-xl bg-green-50 flex items-center justify-center text-xl flex-shrink-0">
+                      <div className="w-11 h-11 rounded-xl bg-accent-primary/10 flex items-center justify-center text-xl flex-shrink-0">
                         {getGroupEmoji(event.groupId)}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-gray-900 font-semibold text-sm truncate">
+                          <span className="text-foreground font-semibold text-sm truncate">
                             {ground?.name ?? 'Unbekannter Ground'}
                           </span>
-                          <ChevronRight className="w-4 h-4 text-gray-300 flex-shrink-0" />
+                          <ChevronRight className="w-4 h-4 text-text-tertiary flex-shrink-0" />
                         </div>
                         <div className="flex items-center gap-1.5 mt-1">
-                          <MapPin className="w-3 h-3 text-gray-300" />
-                          <span className="text-gray-400 text-xs truncate">
+                          <MapPin className="w-3 h-3 text-text-tertiary" />
+                          <span className="text-text-tertiary text-xs truncate">
                             {ground?.city ?? ''}{ground?.bundesland ? `, ${ground.bundesland}` : ''}
                           </span>
                         </div>
                         <div className="flex items-center gap-3 mt-2">
-                          <span className="text-green-600 text-xs font-semibold">
+                          <span className="text-accent-primary text-xs font-semibold">
                             {format(new Date(event.startDateTime), 'HH:mm')} Uhr
                           </span>
                           <div className="flex items-center gap-1">
-                            <Users className="w-3 h-3 text-gray-300" />
-                            <span className="text-gray-400 text-xs">
+                            <Users className="w-3 h-3 text-text-tertiary" />
+                            <span className="text-text-tertiary text-xs">
                               {getGroupName(event.groupId)}
                             </span>
                           </div>
                         </div>
                         {ground?.capacity && (
                           <div className="mt-1.5 flex items-center gap-1.5">
-                            <span className="text-gray-300 text-xs">
+                            <span className="text-text-tertiary text-xs">
                               {ground.isStadium ? '🏟️' : '⚽'} {ground.capacity.toLocaleString('de-DE')} Plätze
                             </span>
                             {ground.floodlights && (
-                              <span className="text-gray-300 text-xs">💡 Flutlicht</span>
+                              <span className="text-text-tertiary text-xs">💡 Flutlicht</span>
                             )}
                           </div>
                         )}
                         {event.meetingPoint && (
-                          <div className="mt-1.5 text-xs text-gray-400">
+                          <div className="mt-1.5 text-xs text-text-tertiary">
                             Treffpunkt: {event.meetingPoint.label}
                           </div>
                         )}
@@ -403,8 +403,8 @@ export function WelcomeScreen() {
         {/* Quick Stats */}
         <section>
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-gray-400 text-xs uppercase tracking-wider font-semibold">Deine Stats</span>
-            <div className="flex-1 h-px bg-gray-100" />
+            <span className="text-text-tertiary text-xs uppercase tracking-wider font-semibold">Deine Stats</span>
+            <div className="flex-1 h-px bg-surface-muted" />
           </div>
           <div className="grid grid-cols-3 gap-2">
             {[
@@ -412,10 +412,10 @@ export function WelcomeScreen() {
               { value: stats.bundeslaenderCount, label: 'Bundesländer', icon: '🗺️' },
               { value: stats.totalPhotos, label: 'Fotos', icon: '📷' },
             ].map((s) => (
-              <div key={s.label} className="bg-white rounded-2xl border border-gray-100 p-3 text-center">
+              <div key={s.label} className="bg-surface rounded-2xl border border-divider p-3 text-center">
                 <span className="text-lg">{s.icon}</span>
-                <p className="text-gray-900 font-bold text-lg mt-0.5">{s.value}</p>
-                <p className="text-gray-400 text-xs">{s.label}</p>
+                <p className="text-foreground font-bold text-lg mt-0.5">{s.value}</p>
+                <p className="text-text-tertiary text-xs">{s.label}</p>
               </div>
             ))}
           </div>
@@ -425,7 +425,7 @@ export function WelcomeScreen() {
         <section>
           <button
             onClick={() => navigate('/map')}
-            className="w-full flex items-center gap-3 bg-green-600 text-white rounded-2xl p-4 transition-all active:scale-[0.98]"
+            className="w-full flex items-center gap-3 bg-accent-primary text-white rounded-2xl p-4 transition-all active:scale-[0.98]"
           >
             <Map className="w-5 h-5" />
             <span className="font-semibold text-sm">Karte erkunden</span>

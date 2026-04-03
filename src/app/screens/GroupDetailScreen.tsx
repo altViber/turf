@@ -23,8 +23,8 @@ function EventCard({ event, isNext, groupColor }: {
 
   return (
     <div
-      className={`bg-white rounded-2xl p-4 border transition-all ${
-        isNext ? 'border-2 shadow-sm' : isPast ? 'border border-gray-100 opacity-55' : 'border border-gray-100 shadow-sm'
+      className={`bg-surface rounded-2xl p-4 border transition-all ${
+        isNext ? 'border-2 shadow-sm' : isPast ? 'border border-divider opacity-55' : 'border border-divider shadow-sm'
       }`}
       style={isNext ? { borderColor: groupColor } : undefined}
     >
@@ -37,16 +37,16 @@ function EventCard({ event, isNext, groupColor }: {
             </span>
           )}
           {tonight && (
-            <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-600">
+            <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-warning/10 text-warning">
               ● Tonight
             </span>
           )}
           {isPast && (
-            <span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-400">Past</span>
+            <span className="px-2 py-0.5 rounded-full text-xs bg-surface-muted text-text-tertiary">Past</span>
           )}
         </div>
-        <p className="text-gray-900 font-semibold text-base">{format(dt, 'EEEE d MMMM')}</p>
-        <p className="text-gray-400 text-sm">{format(dt, 'HH:mm')} Uhr</p>
+        <p className="text-foreground font-semibold text-base">{format(dt, 'EEEE d MMMM')}</p>
+        <p className="text-text-tertiary text-sm">{format(dt, 'HH:mm')} Uhr</p>
       </div>
 
       {/* Ground */}
@@ -58,8 +58,8 @@ function EventCard({ event, isNext, groupColor }: {
           <MapPin className="w-3.5 h-3.5" style={{ color: groupColor }} />
         </div>
         <div className="min-w-0">
-          <p className="text-gray-800 font-medium text-sm truncate">{ground?.name ?? 'Unknown ground'}</p>
-          <p className="text-gray-400 text-xs truncate">
+          <p className="text-foreground font-medium text-sm truncate">{ground?.name ?? 'Unknown ground'}</p>
+          <p className="text-text-tertiary text-xs truncate">
             {ground?.city ?? '—'}{ground?.bundesland ? `, ${ground.bundesland}` : ''}
           </p>
         </div>
@@ -68,18 +68,18 @@ function EventCard({ event, isNext, groupColor }: {
       {/* Meeting point */}
       {event.meetingPoint && (
         <div className="flex items-start gap-2 mb-2">
-          <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0 mt-0.5 text-sm">
+          <div className="w-7 h-7 rounded-lg bg-info/10 flex items-center justify-center flex-shrink-0 mt-0.5 text-sm">
             <PlaceTypeIcon type={event.meetingPoint.type} />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
-              <p className="text-gray-800 font-medium text-sm truncate">{event.meetingPoint.label}</p>
-              <span className="px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-400 text-xs font-medium flex-shrink-0">
+              <p className="text-foreground font-medium text-sm truncate">{event.meetingPoint.label}</p>
+              <span className="px-1.5 py-0.5 rounded-full bg-info/10 text-info text-xs font-medium flex-shrink-0">
                 {event.meetingPoint.type}
               </span>
             </div>
             {event.meetingPoint.address && (
-              <p className="text-gray-400 text-xs truncate">{event.meetingPoint.address}</p>
+              <p className="text-text-tertiary text-xs truncate">{event.meetingPoint.address}</p>
             )}
           </div>
         </div>
@@ -87,8 +87,8 @@ function EventCard({ event, isNext, groupColor }: {
 
       {/* Note */}
       {event.note && (
-        <div className="mt-2 pt-2 border-t border-gray-50">
-          <p className="text-gray-400 text-xs leading-relaxed">{event.note}</p>
+        <div className="mt-2 pt-2 border-t border-divider">
+          <p className="text-text-tertiary text-xs leading-relaxed">{event.note}</p>
         </div>
       )}
     </div>
@@ -102,7 +102,7 @@ export function GroupDetailScreen() {
 
   const group = groups.find((g) => g.id === groupId);
   if (!group) return (
-    <div className="h-full flex items-center justify-center text-gray-400 text-sm">
+    <div className="h-full flex items-center justify-center text-text-tertiary text-sm">
       Group not found
     </div>
   );
@@ -114,11 +114,11 @@ export function GroupDetailScreen() {
   const nextId = upcomingEvents[0]?.id;
 
   return (
-    <div className="h-full overflow-y-auto bg-gray-50">
+    <div className="h-full overflow-y-auto bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
+      <div className="bg-surface border-b border-divider sticky top-0 z-10">
         <div className="px-4 pt-12 pb-3">
-          <button onClick={() => navigate('/planner')} className="flex items-center gap-1.5 text-gray-400 text-sm mb-3 -ml-0.5">
+          <button onClick={() => navigate('/planner')} className="flex items-center gap-1.5 text-text-tertiary text-sm mb-3 -ml-0.5">
             <ArrowLeft className="w-4 h-4" />
             Groups
           </button>
@@ -127,10 +127,10 @@ export function GroupDetailScreen() {
               {group.emoji}
             </div>
             <div>
-              <h1 className="text-gray-900 leading-snug" style={{ fontSize: '20px', fontWeight: 700 }}>
+              <h1 className="text-foreground leading-snug" style={{ fontSize: '20px', fontWeight: 700 }}>
                 {group.name}
               </h1>
-              {group.description && <p className="text-gray-400 text-xs">{group.description}</p>}
+              {group.description && <p className="text-text-tertiary text-xs">{group.description}</p>}
             </div>
           </div>
         </div>
@@ -147,7 +147,7 @@ export function GroupDetailScreen() {
               </div>
             ))}
           </div>
-          <span className="text-gray-400 text-xs">{group.members.length} members</span>
+          <span className="text-text-tertiary text-xs">{group.members.length} members</span>
         </div>
       </div>
 
@@ -167,17 +167,17 @@ export function GroupDetailScreen() {
       <div className="px-4 pb-8">
         {sortedEvents.length === 0 ? (
           <div className="text-center py-14">
-            <CalendarX className="w-10 h-10 text-gray-200 mx-auto mb-3" />
-            <p className="text-gray-400 font-medium text-sm">No events yet</p>
-            <p className="text-gray-300 text-xs mt-1">Create an event to get started</p>
+            <CalendarX className="w-10 h-10 text-text-tertiary mx-auto mb-3" />
+            <p className="text-text-tertiary font-medium text-sm">No events yet</p>
+            <p className="text-text-tertiary text-xs mt-1">Create an event to get started</p>
           </div>
         ) : (
           <>
             {upcomingEvents.length > 0 && (
               <div className="mb-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-gray-400 text-xs uppercase tracking-wider font-semibold">Upcoming</span>
-                  <div className="flex-1 h-px bg-gray-100" />
+                  <span className="text-text-tertiary text-xs uppercase tracking-wider font-semibold">Upcoming</span>
+                  <div className="flex-1 h-px bg-surface-muted" />
                   <span className="text-white text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: group.color }}>
                     {upcomingEvents.length}
                   </span>
@@ -192,8 +192,8 @@ export function GroupDetailScreen() {
             {pastEvents.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-gray-400 text-xs uppercase tracking-wider font-semibold">Past</span>
-                  <div className="flex-1 h-px bg-gray-100" />
+                  <span className="text-text-tertiary text-xs uppercase tracking-wider font-semibold">Past</span>
+                  <div className="flex-1 h-px bg-surface-muted" />
                 </div>
                 <div className="space-y-3">
                   {pastEvents.map((ev) => (
