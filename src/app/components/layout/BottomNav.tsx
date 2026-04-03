@@ -1,7 +1,8 @@
 import { useLocation, useNavigate } from 'react-router';
-import { Map, CalendarDays, Award, User } from 'lucide-react';
+import { Home, Map, CalendarDays, Award, User } from 'lucide-react';
 
 const TABS = [
+  { path: '/welcome', label: 'Home', icon: Home },
   { path: '/map', label: 'Map', icon: Map },
   { path: '/planner', label: 'Planner', icon: CalendarDays },
   { path: '/badges', label: 'Badges', icon: Award },
@@ -13,7 +14,7 @@ export function BottomNav() {
   const { pathname } = useLocation();
 
   const isActive = (path: string) => {
-    if (path === '/map') return pathname === '/map' || pathname === '/';
+    if (path === '/welcome') return pathname === '/welcome' || pathname === '/';
     return pathname.startsWith(path);
   };
 
