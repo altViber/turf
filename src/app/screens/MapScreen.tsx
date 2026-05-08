@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { Train, Layers, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Train, Layers } from 'lucide-react';
 import { toast } from 'sonner';
 import { MapView, type FlyToTarget } from '../components/map/MapView';
 import { GroundBottomSheet } from '../components/map/GroundBottomSheet';
-import { MatchBottomSheet } from '../components/map/MatchBottomSheet';
+import { MatchNavigator } from '../components/map/MatchNavigator';
 import { RailModePanel } from '../components/map/RailModePanel';
 import { LogVisitModal } from '../components/map/LogVisitModal';
 import { getUpcomingMatches, type Match } from '../../services/matchService';
@@ -132,24 +132,6 @@ export function MapScreen() {
         onStatusChange={setMapStatus}
       />
 
-      {/* Match navigation arrows */}
-      {sortedMatches.length > 1 && (
-        <div className="absolute bottom-28 left-0 right-0 z-20 flex justify-between px-3 pointer-events-none">
-          <button
-            onClick={() => navigateMatch(-1)}
-            className="pointer-events-auto w-10 h-10 rounded-full bg-surface shadow-lg border border-divider flex items-center justify-center active:scale-95 transition-transform"
-          >
-            <ChevronLeft className="w-5 h-5 text-foreground" />
-          </button>
-          <button
-            onClick={() => navigateMatch(1)}
-            className="pointer-events-auto w-10 h-10 rounded-full bg-surface shadow-lg border border-divider flex items-center justify-center active:scale-95 transition-transform"
-          >
-            <ChevronRight className="w-5 h-5 text-foreground" />
-          </button>
-        </div>
-      )}
-
       {/* Top-left: Rail Mode toggle */}
       <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
         <button
@@ -239,17 +221,25 @@ export function MapScreen() {
         </div>
       )}
 
+      {/* Match Navigator */}
+      {sortedMatches.length > 0 && sortedMatches[matchIndex] && !selectedGround && (
+        <MatchNavigator
+          match={sortedMatches[matchIndex]}
+          index={matchIndex}
+          total={sortedMatches.length}
+          distanceKm={userLoc && sortedMatches[matchIndex].ground
+            ? haversineKm(userLoc.lat, userLoc.lng, sortedMatches[matchIndex].ground!.lat, sortedMatches[matchIndex].ground!.lng)
+            : undefined}
+          onPrev={() => navigateMatch(-1)}
+          onNext={() => navigateMatch(1)}
+        />
+      )}
+
       {/* Ground Bottom Sheet */}
       <GroundBottomSheet
         ground={selectedGround}
         onClose={() => setSelectedGround(null)}
         onLogVisit={handleLogVisit}
-      />
-
-      {/* Match Bottom Sheet */}
-      <MatchBottomSheet
-        match={selectedMatch}
-        onClose={() => setSelectedMatch(null)}
       />
 
       {/* Log Visit Modal */}
