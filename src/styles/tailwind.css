@@ -8,16 +8,26 @@
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 }
 
-/* Ensure app fills full viewport height */
-html, body, #root {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
+html {
+  background: var(--surface-elevated);
 }
 
-/* Fill safe area behind home indicator with nav color */
-html {
-  background-color: var(--surface-elevated);
+body {
+  margin: 0;
+}
+
+#root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface-elevated);
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.safe-area-bottom {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* MapLibre GL overrides — ensure map fills container */

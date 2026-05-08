@@ -457,7 +457,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         }
       `}</style>
 
-      <div className="fixed inset-0 bg-surface z-50 flex flex-col overflow-hidden select-none">
+      <div className="fixed inset-0 bg-surface z-50 flex flex-col overflow-hidden select-none" style={{ paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         {/* ── Slide container ────────────────────────────────────────────── */}
         <div
           className="flex-1 overflow-hidden"
@@ -482,12 +482,12 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                 style={{ width: `${100 / SCREENS.length}%` }}
               >
                 {/* Visual area */}
-                <div className="flex-1 min-h-0">
+                <div className="min-h-0" style={{ flex: '1 1 45%' }}>
                   {s.visual}
                 </div>
 
                 {/* Text content */}
-                <div className="bg-surface px-6 pt-5 pb-8 flex flex-col gap-4 shrink-0">
+                <div className="bg-surface px-6 pt-5 pb-6 flex flex-col gap-3.5 shrink-0">
                   {/* Progress dots */}
                   <ProgressDots total={SCREENS.length} current={i} accent={s.accent} />
 

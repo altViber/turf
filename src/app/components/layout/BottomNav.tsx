@@ -19,7 +19,7 @@ export function BottomNav() {
   };
 
   return (
-    <nav className="bg-surface-elevated border-t border-divider flex-shrink-0">
+    <nav className="shrink-0 bg-surface-elevated border-t border-divider safe-area-bottom">
       <div className="flex">
         {TABS.map(({ path, label, icon: Icon }) => {
           const active = isActive(path);
@@ -27,14 +27,14 @@ export function BottomNav() {
             <button
               key={path}
               onClick={() => navigate(path)}
-              className={`flex-1 flex flex-col items-center py-2 gap-0.5 transition-colors ${
+              className={`flex-1 flex flex-col items-center pt-2 pb-1 gap-0.5 transition-colors ${
                 active ? 'text-accent-primary' : 'text-text-tertiary'
               }`}
             >
               <Icon className={`w-5 h-5 transition-all ${active ? 'stroke-[2.5]' : 'stroke-[1.5]'}`} />
               <span className="text-xs" style={{ fontWeight: active ? 600 : 400 }}>{label}</span>
               {active && (
-                <div className="w-1 h-1 rounded-full bg-accent-primary mt-0.5" />
+                <div className="w-1 h-1 rounded-full bg-accent-primary" />
               )}
             </button>
           );
