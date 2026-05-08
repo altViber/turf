@@ -535,17 +535,6 @@ export function MapView({
         },
       });
 
-      map.addLayer({
-        id: 'match-labels',
-        type: 'symbol',
-        source: 'matches',
-        minzoom: 8,
-        layout: {
-          'text-field': '⚽',
-          'text-size': 14,
-          'text-allow-overlap': true,
-        },
-      });
 
       map.on('click', 'match-markers', (e) => {
         const feature = e.features?.[0];

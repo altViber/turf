@@ -96,7 +96,7 @@ export function MapScreen() {
       toast.success('Karte geladen', {
         description: 'Zoome rein, um Grounds zu entdecken.',
         duration: 4500,
-        icon: '⚽',
+        icon: undefined,
       });
     }, 1000);
     return () => clearTimeout(timer);

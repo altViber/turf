@@ -39,7 +39,7 @@ export function MatchNavigator({
         {/* Header */}
         <div className="px-4 pt-3 pb-1 flex items-center justify-between">
           <p className="text-foreground text-xs font-bold tracking-wide uppercase">
-            {isUpcoming ? '⚽ Nächster Ground' : '⚽ Letztes Spiel'}
+            {isUpcoming ? 'Nächster Ground' : 'Letztes Spiel'}
           </p>
           <div className="flex items-center gap-1.5">
             <span className="text-xs font-semibold text-accent-primary bg-accent-primary/10 px-2 py-0.5 rounded-full">
