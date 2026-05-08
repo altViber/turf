@@ -15,7 +15,7 @@ export const router = createBrowserRouter([
   {
     Component: RootLayout,
     children: [
-      { index: true, loader: () => redirect(`${base}welcome`) },
+      { index: true, loader: () => redirect('welcome') },
       { path: 'welcome', Component: WelcomeScreen },
       { path: 'map', Component: MapScreen },
       { path: 'planner', Component: PlannerScreen },
