@@ -230,6 +230,7 @@ export function MapScreen() {
           distanceKm={userLoc && sortedMatches[matchIndex].ground
             ? haversineKm(userLoc.lat, userLoc.lng, sortedMatches[matchIndex].ground!.lat, sortedMatches[matchIndex].ground!.lng)
             : undefined}
+          userLoc={userLoc}
           onPrev={() => navigateMatch(-1)}
           onNext={() => navigateMatch(1)}
         />
