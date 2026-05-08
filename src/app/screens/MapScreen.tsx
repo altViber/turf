@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react';
-import { Train, Layers } from 'lucide-react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { Train, Layers, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
-import { MapView } from '../components/map/MapView';
+import { MapView, type FlyToTarget } from '../components/map/MapView';
 import { GroundBottomSheet } from '../components/map/GroundBottomSheet';
 import { MatchBottomSheet } from '../components/map/MatchBottomSheet';
 import { RailModePanel } from '../components/map/RailModePanel';
 import { LogVisitModal } from '../components/map/LogVisitModal';
 import { getUpcomingMatches, type Match } from '../../services/matchService';
+import { haversineKm } from '../../services/groundService';
 import type { Ground, RailLine } from '../../types';
 
 export function MapScreen() {
@@ -20,30 +21,77 @@ export function MapScreen() {
   const [reachableCount, setReachableCount] = useState(0);
   const [mapStatus, setMapStatus] = useState<'idle' | 'loading' | 'zoom-too-low'>('zoom-too-low');
   const [matches, setMatches] = useState<Match[]>([]);
+  const [userLoc, setUserLoc] = useState<{ lat: number; lng: number } | null>(null);
+  const [matchIndex, setMatchIndex] = useState(0);
+  const [flyTo, setFlyTo] = useState<FlyToTarget | null>(null);
+  const [initialFlyDone, setInitialFlyDone] = useState(false);
 
-  // Auto-dismiss the zoom-in hint after 6 s (user already sees clusters)
-  const [hintDismissed, setHintDismissed] = useState(false);
+  // Sorted matches: upcoming first, sorted by distance from user
+  const sortedMatches = useMemo(() => {
+    const upcoming = matches.filter((m) => !m.matchIsFinished && m.ground);
+    if (!userLoc) return upcoming;
+    return upcoming.sort((a, b) => {
+      const distA = haversineKm(userLoc.lat, userLoc.lng, a.ground!.lat, a.ground!.lng);
+      const distB = haversineKm(userLoc.lat, userLoc.lng, b.ground!.lat, b.ground!.lng);
+      return distA - distB;
+    });
+  }, [matches, userLoc]);
+
+  // Get user location
   useEffect(() => {
-    if (mapStatus !== 'zoom-too-low') {
-      setHintDismissed(false); // reset if user zooms back out
-      return;
-    }
-    const t = setTimeout(() => setHintDismissed(true), 6000);
-    return () => clearTimeout(t);
-  }, [mapStatus]);
+    navigator.geolocation?.getCurrentPosition(
+      (pos) => setUserLoc({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => {},
+      { enableHighAccuracy: true, timeout: 8000 },
+    );
+  }, []);
 
   // Fetch upcoming matches from OpenLigaDB
   useEffect(() => {
     getUpcomingMatches().then(setMatches).catch(() => {});
   }, []);
 
-  // Post-onboarding: show a welcome toast once the map loads
+  // Auto-fly to nearest match on first load
+  useEffect(() => {
+    if (initialFlyDone || sortedMatches.length === 0) return;
+    const m = sortedMatches[0];
+    if (!m.ground) return;
+    setInitialFlyDone(true);
+    setMatchIndex(0);
+    setSelectedMatch(m);
+    setTimeout(() => {
+      setFlyTo({ lng: m.ground!.lng, lat: m.ground!.lat, zoom: 13 });
+    }, 500);
+  }, [sortedMatches, initialFlyDone]);
+
+  const navigateMatch = useCallback((dir: 1 | -1) => {
+    if (sortedMatches.length === 0) return;
+    const next = (matchIndex + dir + sortedMatches.length) % sortedMatches.length;
+    setMatchIndex(next);
+    const m = sortedMatches[next];
+    setSelectedGround(null);
+    setSelectedMatch(m);
+    if (m.ground) {
+      setFlyTo({ lng: m.ground.lng, lat: m.ground.lat, zoom: 13 });
+    }
+  }, [sortedMatches, matchIndex]);
+
+  // Auto-dismiss the zoom-in hint after 6 s
+  const [hintDismissed, setHintDismissed] = useState(false);
+  useEffect(() => {
+    if (mapStatus !== 'zoom-too-low') {
+      setHintDismissed(false);
+      return;
+    }
+    const t = setTimeout(() => setHintDismissed(true), 6000);
+    return () => clearTimeout(t);
+  }, [mapStatus]);
+
+  // Post-onboarding welcome toast
   useEffect(() => {
     const flag = sessionStorage.getItem('fromOnboarding');
     if (flag !== 'true') return;
     sessionStorage.removeItem('fromOnboarding');
-
-    // Delay slightly so the map has time to render and seed data is applied
     const timer = setTimeout(() => {
       toast.success('Karte geladen', {
         description: 'Zoome rein, um Grounds zu entdecken.',
@@ -77,11 +125,30 @@ export function MapScreen() {
         railModeActive={railModeActive}
         selectedLines={selectedLines}
         matches={matches}
+        flyTo={flyTo}
         onGroundSelect={(g) => { setSelectedMatch(null); setSelectedGround(g); }}
         onMatchSelect={(m) => { setSelectedGround(null); setSelectedMatch(m); }}
         onVisibleCountChange={setReachableCount}
         onStatusChange={setMapStatus}
       />
+
+      {/* Match navigation arrows */}
+      {sortedMatches.length > 1 && (
+        <div className="absolute bottom-28 left-0 right-0 z-20 flex justify-between px-3 pointer-events-none">
+          <button
+            onClick={() => navigateMatch(-1)}
+            className="pointer-events-auto w-10 h-10 rounded-full bg-surface shadow-lg border border-divider flex items-center justify-center active:scale-95 transition-transform"
+          >
+            <ChevronLeft className="w-5 h-5 text-foreground" />
+          </button>
+          <button
+            onClick={() => navigateMatch(1)}
+            className="pointer-events-auto w-10 h-10 rounded-full bg-surface shadow-lg border border-divider flex items-center justify-center active:scale-95 transition-transform"
+          >
+            <ChevronRight className="w-5 h-5 text-foreground" />
+          </button>
+        </div>
+      )}
 
       {/* Top-left: Rail Mode toggle */}
       <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">

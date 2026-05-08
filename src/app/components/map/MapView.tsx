@@ -7,10 +7,17 @@ import { fetchGrounds, haversineKm, MAX_REACH_KM } from '../../../services/groun
 import { grounds as seedGrounds } from '../../../data/grounds';
 import type { Match } from '../../../services/matchService';
 
+export interface FlyToTarget {
+  lng: number;
+  lat: number;
+  zoom?: number;
+}
+
 interface MapViewProps {
   railModeActive: boolean;
   selectedLines: RailLine[];
   matches: Match[];
+  flyTo?: FlyToTarget | null;
   onGroundSelect: (ground: Ground) => void;
   onMatchSelect: (match: Match) => void;
   onVisibleCountChange?: (count: number) => void;
@@ -156,6 +163,7 @@ export function MapView({
   railModeActive,
   selectedLines,
   matches,
+  flyTo,
   onGroundSelect,
   onMatchSelect,
   onVisibleCountChange,
@@ -302,18 +310,6 @@ export function MapView({
     });
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        map.flyTo({
-          center: [pos.coords.longitude, pos.coords.latitude],
-          zoom: 13,
-          duration: 1500,
-        });
-      },
-      () => {},
-      { enableHighAccuracy: true, timeout: 8000 },
-    );
 
     map.on('load', () => {
       map.resize();
@@ -697,6 +693,19 @@ export function MapView({
     if (map.isStyleLoaded()) fit();
     else map.once('load', fit);
   }, [railModeActive, selectedLines]);
+
+  // ── Fly to target ──────────────────────────────────────────────────────────
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !flyTo) return;
+    const go = () => map.flyTo({
+      center: [flyTo.lng, flyTo.lat],
+      zoom: flyTo.zoom ?? 13,
+      duration: 1200,
+    });
+    if (map.isStyleLoaded()) go();
+    else map.once('load', go);
+  }, [flyTo]);
 
   // ── Update match markers when matches prop changes ─────────────────────────
   useEffect(() => {
