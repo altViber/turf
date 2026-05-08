@@ -186,7 +186,7 @@ export function MatchNavigator({
         )}
 
         {/* Footer */}
-        <div className="px-4 pb-3 flex items-center justify-between text-text-tertiary text-xs">
+        <div className="px-4 pt-4 pb-3 flex items-center justify-between text-text-tertiary text-xs">
           <div className="flex items-center gap-3">
             <span>{timeLabel}</span>
             {distanceKm != null && (
