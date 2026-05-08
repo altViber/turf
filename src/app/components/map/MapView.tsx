@@ -5,11 +5,14 @@ import type { Ground, RailLine } from '../../../types';
 import { stations, getLineGeometry } from '../../../data/railData';
 import { fetchGrounds, haversineKm, MAX_REACH_KM } from '../../../services/groundService';
 import { grounds as seedGrounds } from '../../../data/grounds';
+import type { Match } from '../../../services/matchService';
 
 interface MapViewProps {
   railModeActive: boolean;
   selectedLines: RailLine[];
+  matches: Match[];
   onGroundSelect: (ground: Ground) => void;
+  onMatchSelect: (match: Match) => void;
   onVisibleCountChange?: (count: number) => void;
   onStatusChange?: (status: 'idle' | 'loading' | 'zoom-too-low') => void;
 }
@@ -136,10 +139,25 @@ function createTerminalEl(lineName: string, label: string, color: string): HTMLE
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
+function matchesToGeoJSON(matches: Match[]): GeoJSON.FeatureCollection {
+  return {
+    type: 'FeatureCollection',
+    features: matches
+      .filter((m) => m.ground)
+      .map((m) => ({
+        type: 'Feature' as const,
+        geometry: { type: 'Point' as const, coordinates: [m.ground!.lng, m.ground!.lat] },
+        properties: { _matchJson: JSON.stringify(m) },
+      })),
+  };
+}
+
 export function MapView({
   railModeActive,
   selectedLines,
+  matches,
   onGroundSelect,
+  onMatchSelect,
   onVisibleCountChange,
   onStatusChange,
 }: MapViewProps) {
@@ -149,6 +167,8 @@ export function MapView({
   // Stable refs for callbacks / props so effects don't recreate the map
   const onGroundSelectRef = useRef(onGroundSelect);
   onGroundSelectRef.current = onGroundSelect;
+  const onMatchSelectRef = useRef(onMatchSelect);
+  onMatchSelectRef.current = onMatchSelect;
   const onVisibleCountChangeRef = useRef(onVisibleCountChange);
   onVisibleCountChangeRef.current = onVisibleCountChange;
   const onStatusChangeRef = useRef(onStatusChange);
@@ -282,6 +302,18 @@ export function MapView({
     });
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        map.flyTo({
+          center: [pos.coords.longitude, pos.coords.latitude],
+          zoom: 13,
+          duration: 1500,
+        });
+      },
+      () => {},
+      { enableHighAccuracy: true, timeout: 8000 },
+    );
 
     map.on('load', () => {
       map.resize();
@@ -492,6 +524,45 @@ export function MapView({
         }
       });
 
+      // ── Match source & layers ────────────────────────────────────────────
+      map.addSource('matches', { type: 'geojson', data: matchesToGeoJSON([]) });
+
+      map.addLayer({
+        id: 'match-markers',
+        type: 'circle',
+        source: 'matches',
+        paint: {
+          'circle-color': '#ef4444',
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 5, 7, 14, 12],
+          'circle-stroke-width': 2.5,
+          'circle-stroke-color': '#fff',
+        },
+      });
+
+      map.addLayer({
+        id: 'match-labels',
+        type: 'symbol',
+        source: 'matches',
+        minzoom: 8,
+        layout: {
+          'text-field': '⚽',
+          'text-size': 14,
+          'text-allow-overlap': true,
+        },
+      });
+
+      map.on('click', 'match-markers', (e) => {
+        const feature = e.features?.[0];
+        if (!feature) return;
+        try {
+          const match = JSON.parse(feature.properties?._matchJson as string) as Match;
+          onMatchSelectRef.current(match);
+        } catch { /* ignore */ }
+      });
+
+      map.on('mouseenter', 'match-markers', () => { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', 'match-markers', () => { map.getCanvas().style.cursor = ''; });
+
       // Cluster zoom-in on click
       map.on('click', 'clusters', (e) => {
         const feature = e.features?.[0];
@@ -626,6 +697,18 @@ export function MapView({
     if (map.isStyleLoaded()) fit();
     else map.once('load', fit);
   }, [railModeActive, selectedLines]);
+
+  // ── Update match markers when matches prop changes ─────────────────────────
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const update = () => {
+      const src = map.getSource('matches') as maplibregl.GeoJSONSource | undefined;
+      src?.setData(matchesToGeoJSON(matches));
+    };
+    if (map.isStyleLoaded()) update();
+    else map.once('load', update);
+  }, [matches]);
 
   return <div ref={containerRef} className="w-full h-full" />;
 }

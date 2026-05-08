@@ -166,40 +166,17 @@ interface OpenLigaMatch {
   location?: ApiLocation | null;
 }
 
-// Professional leagues (2025/2026 season = parameter 2025)
-const PRO_LEAGUES: { shortcut: string; season: number }[] = [
-  { shortcut: 'bl1', season: 2025 },
-  { shortcut: 'bl2', season: 2025 },
-  { shortcut: 'bl3', season: 2025 },
-  { shortcut: 'dfb', season: 2025 },
-];
-
-// Amateur / lower division leagues available on OpenLigaDB
-const AMATEUR_LEAGUES: { shortcut: string; season: number }[] = [
-  { shortcut: 'rlno', season: 2025 },        // Regionalliga Nordost
-  { shortcut: 'rlno_n', season: 2025 },       // Regionalliga Nordost (alt)
-  { shortcut: 'RLW', season: 2024 },          // Regionalliga West
-  { shortcut: 'OLW', season: 2024 },          // Oberliga Westfalen
-  { shortcut: 'KADÜ', season: 2024 },         // Kreisliga A Düsseldorf
-  { shortcut: 'Bezirksliga1', season: 2025 }, // Bezirksliga 1
-  { shortcut: 'kr1', season: 2025 },          // Kreisliga West
-  { shortcut: 'KL-Gr1-SW', season: 2025 },   // Kreisliga Schweinfurt GR1
-  { shortcut: 'B5NF', season: 2025 },         // Kreisliga B5 Neckarfils
-  { shortcut: 'Kreisliga A5', season: 2025 }, // Kreisliga A5 FVRHLD
-  { shortcut: 'lk1', season: 2025 },          // Senioren Ü40
-];
-
-const ALL_LEAGUES = [...PRO_LEAGUES, ...AMATEUR_LEAGUES];
+const LEAGUES = ['bl1', 'bl2', 'bl3'] as const;
 
 let cachedMatches: Match[] | null = null;
 let cacheTimestamp = 0;
 const CACHE_TTL = 30 * 60 * 1000; // 30 min
 
-async function fetchLeague(shortcut: string, season: number): Promise<OpenLigaMatch[]> {
+async function fetchCurrentMatchday(league: string): Promise<OpenLigaMatch[]> {
   try {
     const res = await fetch(
-      `https://api.openligadb.de/getmatchdata/${shortcut}/${season}`,
-      { signal: AbortSignal.timeout(15_000) },
+      `https://api.openligadb.de/getmatchdata/${league}`,
+      { signal: AbortSignal.timeout(10_000) },
     );
     if (!res.ok) return [];
     const data = await res.json();
@@ -209,31 +186,8 @@ async function fetchLeague(shortcut: string, season: number): Promise<OpenLigaMa
   }
 }
 
-async function fetchAllMatches(): Promise<Match[]> {
-  const now = Date.now();
-  if (cachedMatches && now - cacheTimestamp < CACHE_TTL) {
-    return cachedMatches;
-  }
-
-  // Fetch pro leagues first (critical), amateur leagues best-effort
-  const [proResults, amateurResults] = await Promise.all([
-    Promise.all(PRO_LEAGUES.map((l) => fetchLeague(l.shortcut, l.season))),
-    Promise.all(AMATEUR_LEAGUES.map((l) => fetchLeague(l.shortcut, l.season))),
-  ]);
-
-  const all = [...proResults.flat(), ...amateurResults.flat()];
-
-  // Deduplicate by matchID (DFB-Pokal teams may overlap)
-  const seen = new Set<number>();
-  const unique: OpenLigaMatch[] = [];
-  for (const m of all) {
-    if (!seen.has(m.matchID)) {
-      seen.add(m.matchID);
-      unique.push(m);
-    }
-  }
-
-  cachedMatches = unique.map((m) => ({
+function toMatch(m: OpenLigaMatch): Match {
+  return {
     matchID: m.matchID,
     matchDateTime: m.matchDateTime,
     leagueShortcut: m.leagueShortcut,
@@ -243,38 +197,36 @@ async function fetchAllMatches(): Promise<Match[]> {
     matchIsFinished: m.matchIsFinished,
     matchResults: m.matchResults ?? [],
     ground: resolveGround(m.team1.teamId, m.location),
-  }));
+  };
+}
 
+async function fetchUpcoming(): Promise<Match[]> {
+  const now = Date.now();
+  if (cachedMatches && now - cacheTimestamp < CACHE_TTL) {
+    return cachedMatches;
+  }
+
+  const results = await Promise.all(LEAGUES.map(fetchCurrentMatchday));
+  const all = results.flat();
+
+  const seen = new Set<number>();
+  const unique: Match[] = [];
+  for (const m of all) {
+    if (!seen.has(m.matchID)) {
+      seen.add(m.matchID);
+      unique.push(toMatch(m));
+    }
+  }
+
+  cachedMatches = unique;
   cacheTimestamp = now;
   return cachedMatches;
 }
 
 // ── Public API ───────────────────────────────────────────────────────────────
 
-/** Get matches near a location within `radiusKm`. */
-export async function getNearbyMatches(
-  lat: number,
-  lng: number,
-  radiusKm = 50,
-): Promise<Match[]> {
-  const matches = await fetchAllMatches();
-  return matches.filter((m) => {
-    if (!m.ground) return false;
-    return haversineKm(lat, lng, m.ground.lat, m.ground.lng) <= radiusKm;
-  });
-}
-
-/** Get the user's current position via Geolocation API. */
-export function getUserLocation(): Promise<{ lat: number; lng: number }> {
-  return new Promise((resolve, reject) => {
-    if (!navigator.geolocation) {
-      reject(new Error('Geolocation not supported'));
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-      (err) => reject(err),
-      { enableHighAccuracy: false, timeout: 10_000, maximumAge: 5 * 60 * 1000 },
-    );
-  });
+/** Current matchday for bl1, bl2, bl3 — only matches with a resolved ground. */
+export async function getUpcomingMatches(): Promise<Match[]> {
+  const matches = await fetchUpcoming();
+  return matches.filter((m) => m.ground !== null);
 }

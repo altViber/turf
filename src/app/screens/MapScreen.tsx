@@ -3,12 +3,15 @@ import { Train, Layers } from 'lucide-react';
 import { toast } from 'sonner';
 import { MapView } from '../components/map/MapView';
 import { GroundBottomSheet } from '../components/map/GroundBottomSheet';
+import { MatchBottomSheet } from '../components/map/MatchBottomSheet';
 import { RailModePanel } from '../components/map/RailModePanel';
 import { LogVisitModal } from '../components/map/LogVisitModal';
+import { getUpcomingMatches, type Match } from '../../services/matchService';
 import type { Ground, RailLine } from '../../types';
 
 export function MapScreen() {
   const [selectedGround, setSelectedGround] = useState<Ground | null>(null);
+  const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [logVisitGround, setLogVisitGround] = useState<Ground | null>(null);
   const [logVisitOpen, setLogVisitOpen] = useState(false);
   const [railModeActive, setRailModeActive] = useState(false);
@@ -16,6 +19,7 @@ export function MapScreen() {
   const [selectedLines, setSelectedLines] = useState<RailLine[]>([]);
   const [reachableCount, setReachableCount] = useState(0);
   const [mapStatus, setMapStatus] = useState<'idle' | 'loading' | 'zoom-too-low'>('zoom-too-low');
+  const [matches, setMatches] = useState<Match[]>([]);
 
   // Auto-dismiss the zoom-in hint after 6 s (user already sees clusters)
   const [hintDismissed, setHintDismissed] = useState(false);
@@ -27,6 +31,11 @@ export function MapScreen() {
     const t = setTimeout(() => setHintDismissed(true), 6000);
     return () => clearTimeout(t);
   }, [mapStatus]);
+
+  // Fetch upcoming matches from OpenLigaDB
+  useEffect(() => {
+    getUpcomingMatches().then(setMatches).catch(() => {});
+  }, []);
 
   // Post-onboarding: show a welcome toast once the map loads
   useEffect(() => {
@@ -67,7 +76,9 @@ export function MapScreen() {
       <MapView
         railModeActive={railModeActive}
         selectedLines={selectedLines}
-        onGroundSelect={setSelectedGround}
+        matches={matches}
+        onGroundSelect={(g) => { setSelectedMatch(null); setSelectedGround(g); }}
+        onMatchSelect={(m) => { setSelectedGround(null); setSelectedMatch(m); }}
         onVisibleCountChange={setReachableCount}
         onStatusChange={setMapStatus}
       />
@@ -166,6 +177,12 @@ export function MapScreen() {
         ground={selectedGround}
         onClose={() => setSelectedGround(null)}
         onLogVisit={handleLogVisit}
+      />
+
+      {/* Match Bottom Sheet */}
+      <MatchBottomSheet
+        match={selectedMatch}
+        onClose={() => setSelectedMatch(null)}
       />
 
       {/* Log Visit Modal */}
