@@ -4,7 +4,7 @@ import { BottomNav } from './BottomNav';
 
 export function RootLayout() {
   return (
-    <div className="flex flex-col h-screen bg-background overflow-hidden">
+    <div className="flex flex-col bg-background overflow-hidden" style={{ height: '100dvh', paddingTop: 'env(safe-area-inset-top)' }}>
       <div className="flex-1 overflow-hidden relative">
         <Outlet />
       </div>
