@@ -15,6 +15,11 @@ html, body, #root {
   overflow: hidden;
 }
 
+/* Fill safe area behind home indicator with nav color */
+html {
+  background-color: var(--surface-elevated);
+}
+
 /* MapLibre GL overrides — ensure map fills container */
 .maplibregl-map {
   width: 100% !important;
