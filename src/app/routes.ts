@@ -9,11 +9,13 @@ import { BadgesScreen } from './screens/BadgesScreen';
 import { ProfileScreen } from './screens/ProfileScreen';
 import { BookmarksScreen } from './screens/BookmarksScreen';
 
+const base = import.meta.env.BASE_URL;
+
 export const router = createBrowserRouter([
   {
     Component: RootLayout,
     children: [
-      { index: true, loader: () => redirect('/welcome') },
+      { index: true, loader: () => redirect(`${base}welcome`) },
       { path: 'welcome', Component: WelcomeScreen },
       { path: 'map', Component: MapScreen },
       { path: 'planner', Component: PlannerScreen },
@@ -24,4 +26,4 @@ export const router = createBrowserRouter([
       { path: 'profile/bookmarks', Component: BookmarksScreen },
     ],
   },
-]);
+], { basename: base.replace(/\/$/, '') });
