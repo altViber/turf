@@ -4,14 +4,15 @@ import { BottomNav } from './BottomNav';
 
 export function RootLayout() {
   return (
-    <div className="fixed inset-0 flex flex-col overflow-hidden bg-surface-elevated" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-      <div className="flex-1 overflow-hidden relative bg-background">
-        <Outlet />
+    <>
+      <div className="fixed inset-0 flex flex-col overflow-hidden bg-surface-elevated" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+        <div className="flex-1 overflow-hidden relative bg-background">
+          <Outlet />
+        </div>
+        <BottomNav />
       </div>
-      <BottomNav />
       <Toaster
         position="top-center"
-        containerStyle={{ position: 'fixed' }}
         toastOptions={{
           style: {
             borderRadius: '16px',
@@ -21,6 +22,6 @@ export function RootLayout() {
           },
         }}
       />
-    </div>
+    </>
   );
 }
