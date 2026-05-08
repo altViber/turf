@@ -1,6 +1,7 @@
+import { useNavigate } from 'react-router';
 import { badgeDefinitions } from '../../data/badgeDefinitions';
 import { useApp } from '../../context/AppContext';
-import { Lock } from 'lucide-react';
+import { ChevronLeft, Lock } from 'lucide-react';
 import type { Badge, BadgeCategory } from '../../types';
 
 const CATEGORY_LABELS: Record<BadgeCategory, string> = {
@@ -65,6 +66,7 @@ function BadgeCard({ badge, unlocked, progress }: {
 }
 
 export function BadgesScreen() {
+  const navigate = useNavigate();
   const { unlockedBadges, visits, events, groups } = useApp();
   const { stats } = useApp();
   const unlockedIds = new Set(unlockedBadges.map((b) => b.badgeId));
@@ -93,6 +95,9 @@ export function BadgesScreen() {
     <div className="h-full overflow-y-auto bg-background">
       {/* Header */}
       <div className="bg-surface border-b border-divider px-4 pt-12 pb-4 sticky top-0 z-10">
+        <button onClick={() => navigate('/profile')} className="flex items-center gap-1.5 text-text-tertiary text-sm mb-3">
+          <ChevronLeft className="w-4 h-4" />Profile
+        </button>
         <h1 className="text-foreground" style={{ fontSize: '22px', fontWeight: 700 }}>Badges</h1>
         <div className="flex items-center gap-2 mt-2">
           <div className="px-3 py-1 bg-accent-primary/15 text-accent-primary rounded-full text-sm font-semibold">

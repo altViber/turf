@@ -206,38 +206,27 @@ export function ProfileScreen() {
           <ChevronRight className="w-4 h-4 text-text-tertiary" />
         </button>
 
-        {/* Badges overview */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-text-tertiary text-xs uppercase tracking-wider font-semibold flex items-center gap-1.5">
-              <Award className="w-3.5 h-3.5" />Badges
-            </p>
-            <span className="text-text-tertiary text-xs">{unlockedBadges.length}/{badgeDefinitions.length}</span>
+        {/* Badges link */}
+        <button
+          onClick={() => navigate('/profile/badges')}
+          className="w-full flex items-center justify-between bg-surface rounded-2xl p-4 border border-divider shadow-sm"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-accent-primary/10 flex items-center justify-center">
+              <Award className="w-4 h-4 text-accent-primary" />
+            </div>
+            <div className="text-left">
+              <p className="text-foreground font-semibold text-sm">Badges</p>
+              <p className="text-text-tertiary text-xs">{unlockedBadges.length} / {badgeDefinitions.length} freigeschaltet</p>
+            </div>
           </div>
-          {unlockedBadgeDefs.length === 0 ? (
-            <div className="bg-surface rounded-2xl p-4 border border-divider text-center">
-              <p className="text-text-tertiary text-sm">No badges yet — start visiting!</p>
-            </div>
-          ) : (
-            <div className="bg-surface rounded-2xl p-4 border border-divider shadow-sm">
-              <div className="flex flex-wrap gap-3">
-                {unlockedBadgeDefs.map((b) => (
-                  <div key={b.id} className="flex flex-col items-center gap-1">
-                    <div className="w-10 h-10 bg-accent-primary/10 rounded-xl flex items-center justify-center text-xl">{b.icon}</div>
-                    <span className="text-text-tertiary text-xs text-center leading-tight max-w-[50px]">
-                      {b.name.split(' ')[0]}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              {unlockedBadgeDefs.length < badgeDefinitions.length && (
-                <p className="text-text-tertiary text-xs text-center mt-3">
-                  {badgeDefinitions.length - unlockedBadgeDefs.length} more to unlock
-                </p>
-              )}
-            </div>
-          )}
-        </div>
+          <div className="flex items-center gap-2">
+            {unlockedBadgeDefs.slice(0, 3).map((b) => (
+              <span key={b.id} className="text-lg">{b.icon}</span>
+            ))}
+            <ChevronRight className="w-4 h-4 text-text-tertiary" />
+          </div>
+        </button>
 
         {/* Groups overview */}
         <div>
